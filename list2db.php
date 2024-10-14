@@ -66,10 +66,14 @@ function processShow($handle)
 	//date, or bootleg title
 	if (identifyLine($line) === DATE_LINE)
 	{   //phish-type of show (date, not title)
-		if (($date = date_create_from_format("mm-dd-yy", substr($line, 0, 8))) === false)
+		$century = (substr($line, 7, 8) > date('y') ? '19' : '20');
+		$datestr = substr_replace(substr($line, 0, 8), $century, 7, 0);
+		if (($date = date_create_from_format("m-d-Y", $datestr)) === false){
 			echo "invalid date format: $line ($artist)";
-		if (strlen($line) > 8)
+		}
+		if (strlen($line) > 8){
 			$datePostfix = substr($line, 8);
+		}
 	}
 	else
 	{   //non-phish type of show (bootleg title, not the date)
