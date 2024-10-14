@@ -51,7 +51,9 @@ class Show{
 		$line = $this->getNextLine();
 		if(LineTypes::identifyLine($line, false) === LineTypes::DATE_LINE){
 //			logDebug('confirmed date-line: '.trim($line));
-			$this->showDate = DateTime::createFromFormat('m-d-y', substr($line, 0, 8));
+			$century = (substr($line, 7, 8) > date('y') ? '19' : '20');
+			$datestr = substr_replace(substr($line, 0, 8), $century, 7, 0);
+			$this->showDate = DateTime::createFromFormat('m-d-Y', $datestr);
 //			logDebug("date after parsing [".var_export($this->getDate(), true).']');
 			if($this->getDate() === false){
 				$this->altDateStr = $line;//not sure why i originally had this as "substr($line, 0, 8)" ??
